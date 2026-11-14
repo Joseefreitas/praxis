@@ -1,2 +1,4 @@
 \__pycache__
 usuarios.csv
+.venv/
+.env

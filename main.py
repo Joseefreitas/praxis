@@ -1,5 +1,28 @@
 from usuarios import *
+from analisador import analisar_prompt
 
+def menu_auxiliador():
+    limpar_tela()
+
+    print("==================================")
+    print("       PRÁXIS | AUXILIADOR")
+    print("==================================")
+
+    prompt = input("\nDigite seu prompt: ")
+
+    try:
+        resultado = analisar_prompt(prompt)
+
+        print("\n=== ANÁLISE DO PRÁXIS ===\n")
+        print(resultado)
+
+    except ValueError as erro:
+        print(f"\nErro: {erro}")
+
+    except Exception as erro:
+        print(f"\nNão foi possível realizar a análise: {erro}")
+
+    input("\nPressione ENTER para voltar ao menu...")
 
 def menu_principal():
     while True:
@@ -18,7 +41,7 @@ def menu_principal():
             menu_usuarios()
 
         elif opcao == "2":
-            print("Auxiliador de prompts embreve")
+            menu_auxiliador()
 
         elif opcao == "0":
             print("Obrigador por usar práxi tchau!")
