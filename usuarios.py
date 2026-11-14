@@ -1,7 +1,9 @@
 import os
 import ast
+import csv
 
-usuarios = []
+COLUNAS = ("nome", "login", "senha", "utilizacao")
+CAMINHO_ARQUIVO = "dados/usuarios.csv"
 
 
 def limpar_tela():
@@ -18,32 +20,31 @@ def menu_usuarios():
         print("Este programa tem como objetivo de auxiliar na gestão de Prompts")
         print("Escolha uma das opções abaixo para continuar:")
         print("-------------------------------------")
-        print("|    2 - Cadastrar Usuário           |")
-        print("|    3 - Listar Usuários             |")
-        print("|    4 - Atualizar Usuário           |")
-        print("|    5 - Deletar Usuário             |")
+        print("|    1 - Cadastrar Usuário           |")
+        print("|    2 - Listar Usuários             |")
+        print("|    3 - Atualizar Usuário           |")
+        print("|    4 - Deletar Usuário             |")
         print("|    0 - Voltar ao Menu Principal    |")
         print("-------------------------------------")
 
         opcao = input("Digite o número da opção desejada: ")
 
         if opcao == "1":
-            print("Você escolheu a opção 1 - Entrar Com Usuário Existente")
-
-        elif opcao == "2":
-            print("Você escolheu a opção 2 - Cadastrar Usuário")
+            print("Você escolheu a opção 1 - Cadastrar Usuário")
             cadastrar_usuario()
 
-        elif opcao == "3":
-            print("Você escolheu a opção 3 - Listar Usuários")
+        elif opcao == "2":
+            print("Você escolheu a opção 2 - Listar Usuários")
             listar_usuarios()
 
 
-        elif opcao == "4":
-            print("Você escolheu a opção 4 - Atualizar Usuário")
+        elif opcao == "3":
+            print("Você escolheu a opção 3 - Atualizar Usuário")
+            atualizar_usuario()
 
-        elif opcao == "5":
-            print("Você escolheu a opção 5 - Deletar Usuário")
+        elif opcao == "4":
+            print("Você escolheu a opção 4 - Deletar Usuário")
+            deletar_usuario()
 
         elif opcao == "0":
             print("\nVoltando ao menu principal. Até logo!\n")
@@ -57,44 +58,119 @@ def menu_usuarios():
 
 def cadastrar_usuario():
   usuario = {
-      "nome": input("Digite o seu nome: "),
-      "login": input("Digite o seu login: "),
+      "nome": input("Digite o seu nome: ").strip(),
+      "login": input("Digite o seu login: ").strip(),
       "senha": input("Digite a sua senha: "),
-      "utilizacao": input("Como você vai utilizar? "),
+      "utilizacao": input("Como você vai utilizar? ").strip(),
   }
 
-  usuarios.append(usuario)
+  os.makedirs("dados", exist_ok=True)
+  arquivo_existe = os.path.isfile(CAMINHO_ARQUIVO)
 
-  with open("dados/usuarios.txt", "a", encoding="utf-8") as arquivo:
-    arquivo.write(f"{usuario}\n")
+  with open(CAMINHO_ARQUIVO, "a", newline="", encoding="utf-8") as arquivo:
+    escritor = csv.DictWriter(arquivo, fieldnames=COLUNAS)
+
+    if not arquivo_existe:
+      escritor.writeheader()
+
+    escritor.writerow(usuario)
 
 
 def listar_usuarios():
   try:
-    with open("dados/usuarios.txt", "r", encoding="utf-8") as arquivo:
-      for linha in arquivo:
-        if linha.strip():
-          usuario = ast.literal_eval(linha)
-          print(usuario["nome"])
+    with open(CAMINHO_ARQUIVO, "r", newline="", encoding="utf-8") as arquivo:
+      leitor = csv.DictReader(arquivo)
+
+      for usuario in leitor:
+        print(usuario["nome"])
+
   except FileNotFoundError:
-    print("Arquivo não encontrado")
-
-# print("--Cadastrar Usuário--")
-# nome = input("Qual o seu nome?: ")
-# nome_usuario = input("Qual vai ser o seu nome de usuario?: ")
-# senha = input("Crie uma senha: ")
+    print("Arquivo de usuários não encontrado.")
 
 
-# print("--Listar Usuários--")
-# nome_usuario = input("Qual o seu nome completo ou nome de usuario?: ")
-# senha = input("Qual a sua senha?: ")
+def atualizar_usuario():
+  try:
+    with open(CAMINHO_ARQUIVO, "r", newline="", encoding="utf-8") as arquivo:
+      usuarios = list(csv.DictReader(arquivo))
+  except FileNotFoundError:
+    print("Arquivo de usuários não encontrado.")
+    return
 
-# print("--Atualizar conta--")
-# novo_nome = input("Qual o novo nome?: ")
-# novo_nome_usuario = input("Qual vai ser o novo nome de usuario?: ")
-# nova_senha = input("Escreva sua nova senha: ")
+  if not usuarios:
+    print("Nenhum usuário cadastrado.")
+    return
 
-# print("--Remover Conta--")
-# usuario_remover = input("Digite seu usuário: ")
-# senha_confirmacao = input("Digite sua senha: ")
-# print("--Conta Removida--")
+  login_busca = input("Digite o login do usuário que deseja atualizar: ")
+  encontrado = False
+
+  for usuario in usuarios:
+    if usuario["login"] == login_busca:
+      encontrado = True
+      print(f"\nUsuário encontrado: {usuario['nome']}")
+      print("Pressione ENTER caso queira manter o valor atual.\n")
+
+      novo_nome = input(f"Novo nome ({usuario['nome']}): ").strip()
+      novo_login = input(f"Novo login ({usuario['login']}): ").strip()
+      nova_senha = input("Nova senha: ").strip()
+      nova_utilizacao = input(
+          f"Nova utilização ({usuario['utilizacao']}): "
+      ).strip()
+
+      if novo_nome:
+        usuario["nome"] = novo_nome
+      if novo_login:
+        usuario["login"] = novo_login
+      if nova_senha:
+        usuario["senha"] = nova_senha
+      if nova_utilizacao:
+        usuario["utilizacao"] = nova_utilizacao
+
+      break
+
+  if not encontrado:
+    print("Usuário não encontrado.")
+    return
+
+  with open(CAMINHO_ARQUIVO, "w", newline="", encoding="utf-8") as arquivo:
+    escritor = csv.DictWriter(arquivo, fieldnames=COLUNAS)
+    escritor.writeheader()
+    escritor.writerows(usuarios)
+
+  print("Usuário atualizado com sucesso!")
+
+
+def deletar_usuario():
+  try:
+    with open(CAMINHO_ARQUIVO, "r", newline="", encoding="utf-8") as arquivo:
+      usuarios = list(csv.DictReader(arquivo))
+  except FileNotFoundError:
+    print("Arquivo de usuários não encontrado.")
+    return
+
+  if not usuarios:
+    print("Nenhum usuário cadastrado.")
+    return
+
+  login_busca = input("Digite o login do usuário que deseja deletar: ").strip()
+
+  usuarios_restantes = [u for u in usuarios if u["login"] != login_busca]
+
+  if len(usuarios_restantes) == len(usuarios):
+    print("Usuário não encontrado.")
+    return
+
+  confirmacao = (
+      input(f"Tem certeza que deseja deletar o login '{login_busca}'? (s/n): ")
+      .strip()
+      .lower()
+  )
+  if confirmacao != "s":
+    print("Operação cancelada.")
+    return
+
+  with open(CAMINHO_ARQUIVO, "w", newline="", encoding="utf-8") as arquivo:
+    escritor = csv.DictWriter(arquivo, fieldnames=COLUNAS)
+    escritor.writeheader()
+    escritor.writerows(usuarios_restantes)
+
+  print("Usuário deletado com sucesso!")
