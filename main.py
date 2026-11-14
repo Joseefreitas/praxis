@@ -1,4 +1,4 @@
-from usuarios import menu_usuarios, limpar_tela
+from usuarios import *
 
 
 def menu_principal():

@@ -1,5 +1,5 @@
-
 import os
+import ast
 
 usuarios = []
 
@@ -16,15 +16,14 @@ def menu_usuarios():
 
         print("Bem Vindo ao Programa da PRÁXIS")
         print("Este programa tem como objetivo de auxiliar na gestão de Prompts")
-        print("   Escolha uma das opções abaixo para continuar:")
-        print("---------------------------------------")
-        print("|    1 - Entrar Com Usuário Existente |")
-        print("|    2 - Cadastrar Usuário            |")
-        print("|    3 - Listar Usuários              |")
-        print("|    4 - Atualizar Usuário            |")
-        print("|    5 - Deletar Usuário              |")
-        print("|    0 - Voltar ao Menu Principal     |")
-        print("---------------------------------------")
+        print("Escolha uma das opções abaixo para continuar:")
+        print("-------------------------------------")
+        print("|    2 - Cadastrar Usuário           |")
+        print("|    3 - Listar Usuários             |")
+        print("|    4 - Atualizar Usuário           |")
+        print("|    5 - Deletar Usuário             |")
+        print("|    0 - Voltar ao Menu Principal    |")
+        print("-------------------------------------")
 
         opcao = input("Digite o número da opção desejada: ")
 
@@ -34,10 +33,11 @@ def menu_usuarios():
         elif opcao == "2":
             print("Você escolheu a opção 2 - Cadastrar Usuário")
             cadastrar_usuario()
-            print(usuarios)
 
         elif opcao == "3":
             print("Você escolheu a opção 3 - Listar Usuários")
+            listar_usuarios()
+
 
         elif opcao == "4":
             print("Você escolheu a opção 4 - Atualizar Usuário")
@@ -56,20 +56,28 @@ def menu_usuarios():
 
 
 def cadastrar_usuario():
-    usuario = {}
-    print("Digite o seu nome")
-    usuario["nome"] = input("")
-    print("Digite o seu login")
-    usuario["login"] = input("")
-    print("Digite a sua senha")
-    usuario["senha"] = input("")
-    print("Como você vai utilizar?")
-    usuario["utilizacao"] = input("")
+  usuario = {
+      "nome": input("Digite o seu nome: "),
+      "login": input("Digite o seu login: "),
+      "senha": input("Digite a sua senha: "),
+      "utilizacao": input("Como você vai utilizar? "),
+  }
 
-    usuarios.append(usuario)
+  usuarios.append(usuario)
+
+  with open("dados/usuarios.txt", "a", encoding="utf-8") as arquivo:
+    arquivo.write(f"{usuario}\n")
+
 
 def listar_usuarios():
-    print()
+  try:
+    with open("dados/usuarios.txt", "r", encoding="utf-8") as arquivo:
+      for linha in arquivo:
+        if linha.strip():
+          usuario = ast.literal_eval(linha)
+          print(usuario["nome"])
+  except FileNotFoundError:
+    print("Arquivo não encontrado")
 
 # print("--Cadastrar Usuário--")
 # nome = input("Qual o seu nome?: ")
