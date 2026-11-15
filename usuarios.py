@@ -3,6 +3,7 @@ import os
 import csv
 
 COLUNAS = ("nome", "login", "senha", "utilizacao")
+COLUNAS_HISTORICO = ("login", "prompt", "analise")
 
 
 def limpar_tela():
@@ -134,7 +135,6 @@ def atualizar_usuario():
     print("\nUsuário atualizado com sucesso!")
 
 
-
 def deletar_usuario():
     try:
         with open("usuarios.csv", "r", newline="", encoding="utf-8") as arquivo:
@@ -173,4 +173,91 @@ def deletar_usuario():
         escritor.writeheader()
         escritor.writerows(usuarios_restantes)
 
+    deletar_historico(login_busca)
+
     print("\nUsuário deletado com sucesso!")
+
+
+def autenticar_usuario(login, senha):
+    
+    try:
+        with open("usuarios.csv", "r", newline="", encoding="utf-8") as arquivo:
+            leitor = csv.DictReader(arquivo)
+
+            for usuario in leitor:
+                if usuario["login"] == login and usuario["senha"] == senha:
+                    return usuario
+
+    except FileNotFoundError:
+        return None
+
+    return None
+
+
+def salvar_historico(login, prompt, analise):
+  
+    from usuarios import (
+    limpar_tela,
+    menu_usuarios,
+    autenticar_usuario,
+    cadastrar_usuario,
+    salvar_historico
+)
+    with open("historico.csv", "a", newline="", encoding="utf-8") as arquivo:
+        escritor = csv.DictWriter(arquivo, fieldnames=COLUNAS_HISTORICO)
+
+        if arquivo.tell() == 0:
+            escritor.writeheader()
+
+        escritor.writerow({
+            "login": login,
+            "prompt": prompt,
+            "analise": analise
+        })
+
+
+def consultar_historico(login):
+    try:
+        with open("historico.csv", "r", newline="", encoding="utf-8") as arquivo:
+            leitor = csv.DictReader(arquivo)
+
+            historico = []
+
+            for registro in leitor:
+                if registro["login"] == login:
+                    historico.append(registro)
+
+    except FileNotFoundError:
+        print("\nVocê ainda não possui histórico de análises.")
+        return
+
+    if not historico:
+        print("\nVocê ainda não possui histórico de análises.")
+        return
+
+    print("\n========== MEU HISTÓRICO ==========")
+
+    for indice, registro in enumerate(historico, start=1):
+        print(f"\nANÁLISE {indice}")
+        print(f"\nPrompt: {registro['prompt']}")
+        print(f"\nAnálise do PRÁXIS:\n{registro['analise']}")
+        print("\n----------------------------------")
+
+
+def deletar_historico(login):
+    try:
+        with open("historico.csv", "r", newline="", encoding="utf-8") as arquivo:
+            historico = list(csv.DictReader(arquivo))
+
+    except FileNotFoundError:
+        return
+
+    historico_restante = [
+        registro for registro in historico
+        if registro["login"] != login
+    ]
+
+    with open("historico.csv", "w", newline="", encoding="utf-8") as arquivo:
+        escritor = csv.DictWriter(arquivo, fieldnames=COLUNAS_HISTORICO)
+        escritor.writeheader()
+        escritor.writerows(historico_restante)
