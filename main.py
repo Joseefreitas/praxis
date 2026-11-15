@@ -1,28 +1,33 @@
-from usuarios import *
+from usuarios import menu_usuarios, limpar_tela
 from analisador import analisar_prompt
 
+
 def menu_auxiliador():
-    limpar_tela()
+    while True:
+        limpar_tela()
 
-    print("==================================")
-    print("       PRÁXIS | AUXILIADOR")
-    print("==================================")
+        print("==================================")
+        print("       PRÁXIS | AUXILIADOR")
+        print("==================================")
 
-    prompt = input("\nDigite seu prompt: ")
+        prompt = input("\nDigite seu prompt: ")
 
-    try:
-        resultado = analisar_prompt(prompt)
+        try:
+            resultado = analisar_prompt(prompt)
 
-        print("\n=== ANÁLISE DO PRÁXIS ===\n")
-        print(resultado)
+            print("\n=== ANÁLISE DO PRÁXIS ===\n")
+            print(resultado)
 
-    except ValueError as erro:
-        print(f"\nErro: {erro}")
+        except ValueError as erro:
+            print(f"\nErro: {erro}")
 
-    except Exception as erro:
-        print(f"\nNão foi possível realizar a análise: {erro}")
+        except Exception as erro:
+            print(f"\nNão foi possível realizar a análise: {erro}")
 
-    input("\nPressione ENTER para voltar ao menu...")
+        opcao = input("\nDeseja analisar outro prompt? (s/n): ").strip().lower()
+
+        if opcao != "s":
+            break
 
 def menu_principal():
     while True:
@@ -44,11 +49,12 @@ def menu_principal():
             menu_auxiliador()
 
         elif opcao == "0":
-            print("Obrigador por usar práxi tchau!")
+            print("Obrigado por usar práxis! Até logo!")
             break
 
         else:
-            print("Opção invalida tente novamente")
+            print("Opção inválida. Por favor, tente novamente.")
+            input("\nPressione ENTER para continuar...")
         
 if __name__ == "__main__":
     menu_principal()
