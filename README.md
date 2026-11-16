@@ -112,7 +112,7 @@ Os arquivos `.env`, `usuarios.csv` e `historico.csv` são gerados ou configurado
 
 O PRÁXIS foi desenvolvido como parte de um projeto acadêmico da graduação em Gestão da Tecnologia da Informação, na CESAR School.
 
-A proposta é explorar como a Inteligência Artificial pode contribuir para a educação, não substituindo o processo de aprendizagem, mas ajudando os estudantes a desenvolverem autonomia no uso dessas ferramentas.
+A proposta é explorar como a Inteligência Artificial pode contribuir para a educação, não substituindo o processo de aprendizagem, mas ajudando os estudantes a desenvolverem autonomia no uso dessas ferramentas, sem perda de pensamento crítico.
 
 ---
 
