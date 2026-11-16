@@ -85,7 +85,7 @@ python main.py
 O projeto utiliza arquivos CSV para armazenar os dados localmente:
 
 | Arquivo | Finalidade |
-|---|---|
+| --- | --- |
 | `usuarios.csv` | Dados dos usuários cadastrados |
 | `historico.csv` | Histórico individual das análises |
 

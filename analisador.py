@@ -84,6 +84,8 @@ def analisar_prompt(prompt):
     if not prompt.strip():
         raise ValueError("O prompt não pode estar vazio.")
 
+    print("\nAnalisando seu prompt...")
+
     resposta = client.chat.completions.create(
         model="qwen/qwen3.8-27b",
         messages=[

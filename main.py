@@ -1,4 +1,4 @@
-from usuarios import menu_usuarios, limpar_tela, cadastrar_usuario, autenticar_usuario, salvar_historico, consultar_historico
+from usuarios import menu_usuarios, limpar_tela, cadastrar_usuario, autenticar_usuario, salvar_historico, consultar_historico, buscar_usuario
 from analisador import analisar_prompt
 
 
@@ -57,6 +57,11 @@ def menu_principal(usuario=None):
 
         if usuario and opcao == "1":
             menu_usuarios()
+            usuario = buscar_usuario(usuario["login"])
+            if not usuario:
+                print("\nSua conta foi removida ou o login foi alterado. Faça login novamente.")
+                input("Pressione ENTER para continuar...")
+                break
 
         elif (usuario and opcao == "2") or (usuario is None and opcao == "1"):
             menu_auxiliador(usuario)
@@ -119,7 +124,10 @@ def menu_entrada():
 
         
 if __name__ == "__main__":
-    usuario = menu_entrada()
+    while True:
+        usuario = menu_entrada()
 
-    if usuario is not False:
+        if usuario is False:
+            break
+
         menu_principal(usuario)
