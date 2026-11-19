@@ -1,5 +1,5 @@
-import os
 import csv
+import os
 
 COLUNAS = ("nome", "login", "senha", "utilizacao")
 COLUNAS_HISTORICO = ("login", "prompt", "analise")

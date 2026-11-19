@@ -8,6 +8,8 @@ A ferramenta foi pensada para estudantes do Ensino Médio que estão se preparan
 
 Em vez de simplesmente executar o pedido do estudante, o PRÁXIS analisa o prompt, identifica possíveis melhorias e apresenta uma versão aprimorada, incentivando a autonomia e o pensamento crítico.
 
+Video da aplicação no [Youtube](https://youtu.be/Tbb5Q33egLs).
+
 ## Funcionalidades
 
 - **Análise de prompts:** avalia clareza, contexto, especificidade e formato esperado.
